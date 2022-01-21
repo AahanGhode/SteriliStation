@@ -55,3 +55,43 @@ void BOOTUP() {
  lcd.clear();
 }
 
+void HOME(){
+  bool button_state = digitalRead(button);
+  
+  if (button_state == true) {
+    button_history = true;
+    return;
+  }
+  
+  while (button_history == false) {
+    bool button_state = digitalRead(button);
+    
+    if (button_state == true){
+      button_history = true;
+      return;
+  }
+  
+  while(button_history == false){
+  bool button_state = digitalRead(button);
+  
+    if (button_state == true){
+      button_history = true;
+      return;
+    }
+    
+  String HOME_T = "SteriliStation:";
+  String HOME_I = "Press To Start";
+  lcd.setCursor(0,0);
+  lcd.print(HOME_T);
+  
+  lcd.setCursor(1,1);
+  lcd.print(HOME_T);
+  delay(500);
+  lcd.clear();
+  lcd.setCursor(0,0);
+  lcd.print(HOME_I);
+  delay(600);
+}
+
+
+}
