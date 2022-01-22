@@ -63,14 +63,6 @@ void HOME(){
     return;
   }
   
-  while (button_history == false) {
-    bool button_state = digitalRead(button);
-    
-    if (button_state == true){
-      button_history = true;
-      return;
-  }
-  
   while(button_history == false){
   bool button_state = digitalRead(button);
   
@@ -91,7 +83,9 @@ void HOME(){
   lcd.setCursor(0,0);
   lcd.print(HOME_I);
   delay(600);
+  }
 }
 
-
+void BUTTON_TRUE(){
+  
 }
