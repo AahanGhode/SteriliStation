@@ -1,10 +1,11 @@
 int switchBtn = 2;
 int buzzer = 3;
 int strtUpBtn = 4;
+int UVBulbs = 5;
 int statusLED = 6;
 bool button_history = false;
 bool latch = false;
-bool door_state = false;
+bool doorState = false;
 int milli;
 int seconds;
 int minutes;
@@ -22,6 +23,7 @@ void setup() {
   lcd.begin(16, 2);
   BOOTUP();
   pinMode(buzzer, OUTPUT);
+  pinMode(UVBulbs, OUTPUT);
   pinMode(strtUpBtn, INPUT);
   pinMode(switchBtn, INPUT);
   pinMode(statusLED, OUTPUT);
@@ -47,7 +49,7 @@ void BOOTUP() {
   delay(2000);
 
 
- for (int positionCounter = 0; positionCounter < BootupMSG_T.length()+3; positionCounter++) {
+ for (int positionCounter = 0; positionCounter < bootUpMsgT.length()+3; positionCounter++) {
   lcd.scrollDisplayLeft();
   
   delay(200);
@@ -56,7 +58,7 @@ void BOOTUP() {
 }
 
 void HOME(){
-  bool button_state = digitalRead(button);
+  bool button_state = digitalRead(strtUpBtn);
   
   if (button_state == true) {
     button_history = true;
@@ -64,7 +66,7 @@ void HOME(){
   }
   
   while(button_history == false){
-  bool button_state = digitalRead(button);
+    bool button_state = digitalRead(strtUpBtn);
   
     if (button_state == true){
       button_history = true;
@@ -89,13 +91,13 @@ void HOME(){
 void BUTTON_TRUE(){
   lcd.clear();
   String BT_P = "Preparing to";
-  String BT_S = "Sterilize"
+  String BT_S = "Sterilize";
   lcd.setCursor(2,0);
-  lcd.print(BT_T);
+  lcd.print(BT_P);
   
   lcd.setCursor(4,1);
   lcd.print(BT_S);
-  delay(1000)
+  delay(1000);
   
   while (latch == HIGH){
    lcd.clear();
@@ -124,3 +126,96 @@ void BUTTON_TRUE(){
    delay(500);
   }
 }
+
+void SANITIZE(){
+  digitalWrite(buzzer, LOW);
+  
+  doorState=digitalRead(switchBtn);
+  
+  if(doorState == HIGH){
+    digitalWrite(UVBulbs, LOW);
+    LID_OPEN();
+  }
+  
+  String SANITIZE_T = "Sterilizing: ";
+  lcd.setCursor(2,0);
+  lcd.print(SANITIZE_T);
+  
+  lcd.setCursor(5,1);
+  lcd.print(14-minutes);
+  lcd.print(":");
+  
+  if(seconds > 49){
+    lcd.print("0");
+    lcd.print(59-seconds);
+  }
+  if(seconds <50){
+    lcd.print(59-seconds);
+  }
+  
+  digitalWrite(UVBulbs, HIGH);
+  milli++;
+  
+  if(milli >= 10){
+    seconds++;
+  
+    if(LED_state == false){
+      digitalWrite(statusLED, HIGH);
+      LED_state = true;
+    }
+    else{
+      digitalWrite(statusLED, LOW);
+      LED_state == false;
+    }
+    milli=0;
+  }
+  
+  if (seconds >= 60){
+    lcd.clear();
+    minutes ++;
+    seconds = 0;
+  }
+  if (minutes >= 15){
+    minutes = 0;
+    void DONE();
+  }
+  Serial.println(milli);
+  Serial.println(seconds);
+  Serial.println(minutes);
+  delay(100);
+}
+
+void DONE(){
+  lcd.clear();
+
+  String DONE_T = "Sterilization";
+  String DONE_B = "Complete";
+  int counter;
+  
+  while (latch == LOW){
+    latch = digitalRead(switchBtn);
+    
+    lcd.setCursor(1,0);
+    lcd.print(DONE_T);
+    lcd.setCursor(3,1);
+    lcd.print(DONE_B);
+    
+    if(counter < 3){
+      digitalWrite(buzzer, HIGH);
+      digitalWrite(statusLED, HIGH);
+      counter++;
+    }
+    
+    delay(500);
+    
+    lcd.clear();
+    digitalWrite(buzzer, LOW);
+    digitalWrite(statusLED, LOW);
+    delay(500);
+  }
+  
+  button_history = false; 
+  HOME();
+  BUTTON_TRUE();
+}
+
