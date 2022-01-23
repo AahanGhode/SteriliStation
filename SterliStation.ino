@@ -87,5 +87,40 @@ void HOME(){
 }
 
 void BUTTON_TRUE(){
+  lcd.clear();
+  String BT_P = "Preparing to";
+  String BT_S = "Sterilize"
+  lcd.setCursor(2,0);
+  lcd.print(BT_T);
   
+  lcd.setCursor(4,1);
+  lcd.print(BT_S);
+  delay(1000)
+  
+  while (latch == HIGH){
+   lcd.clear();
+   latch = digitalRead(switchBtn);
+   if (latch == LOW){
+    break;
+  }
+  
+  Serial.println(latch);
+   String LATCH_T = "Please Close";
+   String LATCH_B = "Door";
+   
+   lcd.setCursor(2,0);
+   lcd.print(LATCH_T);
+  
+   lcd.setCursor(6,1);
+   lcd.print(LATCH_B);
+   delay(500);
+   
+   latch = digitalRead(switchBtn);
+   if (latch == LOW){
+    break;
+   }
+   
+   lcd.clear();
+   delay(500);
+  }
 }
