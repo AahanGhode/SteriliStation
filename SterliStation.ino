@@ -170,12 +170,12 @@ void SANITIZE(){
     milli=0;
   }
   
-  if (seconds >= 60){
+  if(seconds >= 60){
     lcd.clear();
     minutes ++;
     seconds = 0;
   }
-  if (minutes >= 15){
+  if(minutes >= 15){
     minutes = 0;
     void DONE();
   }
@@ -219,3 +219,108 @@ void DONE(){
   BUTTON_TRUE();
 }
 
+void LID_OPEN(){
+  Serial.println("IN LID_OPEN");
+  
+  latch = digitalRead(switchBtn);
+  
+  if(latch == LOW){
+    return;
+  }
+  
+  String LCD_OPEN_T1 = "-Warning";
+  String LCD_OPEN_T2 = "Sterilizing";
+  String LCD_OPEN_T3 = "Stopped";
+  String LCD_OPEN_T4 = "Please Close";
+  String LCD_OPEN_T5 = "Door";
+  
+  while(latch == HIGH){
+   delay(1000);
+   lcd.clear();
+   Serial.println("In LID_OPEN While LOOP");
+   latch = digitalRead(switchBtn);
+   
+   lcd.setCursor(3,0);
+   lcd.print(LCD_OPEN_T1);
+   digitalWrite(buzzer, HIGH);
+   digitalWrite(statusLED, HIGH);
+   
+  
+    if (latch == LOW){
+     break;
+   }
+   latch = digitalRead(switchBtn);
+   delay(500);
+   digitalWrite(buzzer, LOW);
+   digitalWrite(statusLED, LOW);
+   lcd.clear();
+   delay(500);
+   lcd.setCursor(3,0);
+   lcd.print(LCD_OPEN_T1);
+   latch = digitalRead(switchBtn);
+  
+  if (latch == LOW){
+    break;
+   }
+   digitalWrite(buzzer, HIGH);
+   digitalWrite(statusLED, HIGH);
+   delay(500);
+   digitalWrite(buzzer, LOW);
+   digitalWrite(statusLED, LOW);
+   lcd.clear();
+   delay(500);
+   
+   lcd.setCursor(3,0);
+   lcd.print(LCD_OPEN_T1);
+   latch = digitalRead(switchBtn);
+   
+  if (latch == LOW){
+    break;
+   }
+   digitalWrite(buzzer, HIGH);
+   digitalWrite(statusLED, HIGH);
+   delay(500);
+   
+   digitalWrite(buzzer, LOW);
+   digitalWrite(statusLED, LOW);
+   lcd.clear();
+   if (latch == LOW){
+    break;
+   }
+   delay(500);
+   
+   lcd.setCursor(2,0);
+   lcd.print(LCD_OPEN_T2);
+   lcd.setCursor(4,1);
+   lcd.print(LCD_OPEN_T3);
+   latch = digitalRead(switchBtn);
+  
+    if (latch == LOW){
+      break;
+    }
+   digitalWrite(buzzer, HIGH);
+   digitalWrite(statusLED, HIGH);
+   delay(1000);
+    if (latch == LOW){
+    break;
+   }
+  
+   lcd.clear();
+   
+   lcd.setCursor(2,0);
+   lcd.print(LCD_OPEN_T4);
+   
+   lcd.setCursor(6,1);
+   lcd.print(LCD_OPEN_T5);
+   
+   latch = digitalRead(switchBtn);
+  
+  if (latch == LOW){
+    break;
+   }
+   digitalWrite(buzzer, LOW);
+   digitalWrite(statusLED, LOW);
+   delay(750);
+  }
+  return;
+}
