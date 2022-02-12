@@ -142,7 +142,7 @@ void SANITIZE(){
   lcd.print(SANITIZE_T);
   
   lcd.setCursor(5,1);
-  lcd.print(14-minutes);
+  lcd.print(4-minutes);
   lcd.print(":");
   
   if(seconds > 49){
@@ -177,7 +177,7 @@ void SANITIZE(){
   }
   if(minutes >= 15){
     minutes = 0;
-    void DONE();
+     DONE();
   }
   Serial.println(milli);
   Serial.println(seconds);
@@ -190,7 +190,7 @@ void DONE(){
 
   String DONE_T = "Sterilization";
   String DONE_B = "Complete";
-  int counter;
+  int counter = 0;
   
   while (latch == LOW){
     latch = digitalRead(switchBtn);
