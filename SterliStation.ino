@@ -175,7 +175,7 @@ void SANITIZE(){
     minutes ++;
     seconds = 0;
   }
-  if(minutes >= 15){
+  if(minutes >= 5){
     minutes = 0;
      DONE();
   }
